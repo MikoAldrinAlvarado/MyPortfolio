@@ -34,15 +34,57 @@ if (educationBtn && courseBtn && experienceBtn && detailsBtn) {
     })
 }
 
-// Menu Icon 
+// Mobile menu toggle: attach to the anchor for larger hit area
+const menuToggle = document.querySelector('.menu-toggle');
 const menuIcon = document.querySelector('.menu_icon');
 const navbar = document.querySelector('.dropNav');
-if (menuIcon && navbar) {
-    menuIcon.onclick = ()=>{
-        menuIcon.classList.toggle('bx-menu');
-        menuIcon.classList.toggle('bx-x');
-        navbar.classList.toggle('hidden')
-    }
+if (menuToggle && menuIcon && navbar) {
+    // Ensure initial ARIA states
+    menuToggle.setAttribute('aria-expanded', menuToggle.getAttribute('aria-expanded') || 'false');
+    navbar.setAttribute('aria-hidden', navbar.classList.contains('hidden') ? 'true' : 'false');
+
+    menuToggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        const isOpen = navbar.classList.toggle('hidden') ? false : true;
+        menuIcon.classList.toggle('bx-menu', !isOpen);
+        menuIcon.classList.toggle('bx-x', isOpen);
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+        navbar.setAttribute('aria-hidden', String(!isOpen));
+        // If ScrollReveal previously hid the menu (inline styles), force it visible when opened
+        if (isOpen) {
+            const menuEls = navbar.querySelectorAll('.menu, .nav-menu-mobile');
+            menuEls.forEach(el => {
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+                el.style.visibility = 'visible';
+            });
+        }
+    });
+
+    // Close menu when a nav link is clicked
+    navbar.addEventListener('click', function (e) {
+        const target = e.target.closest('a');
+        if (target) {
+            navbar.classList.add('hidden');
+            menuIcon.classList.remove('bx-x');
+            menuIcon.classList.add('bx-menu');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            navbar.setAttribute('aria-hidden', 'true');
+        }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!navbar.contains(e.target) && !menuToggle.contains(e.target)) {
+            if (!navbar.classList.contains('hidden')) {
+                navbar.classList.add('hidden');
+                menuIcon.classList.remove('bx-x');
+                menuIcon.classList.add('bx-menu');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                navbar.setAttribute('aria-hidden', 'true');
+            }
+        }
+    });
 }
 
 
@@ -119,4 +161,37 @@ if (carousel) {
     if (nextBtn) nextBtn.addEventListener('click', () => setActiveSlide(currentIndex + 1));
 
     setActiveSlide(0);
+}
+
+// Contact form: build mailto link and open mail client as fallback (no backend)
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const fname = contactForm.querySelector('input[placeholder="First Name"]').value.trim();
+        const lname = contactForm.querySelector('input[placeholder="Last Name"]').value.trim();
+        const phone = contactForm.querySelector('input[placeholder="Phone"]').value.trim();
+        const subject = contactForm.querySelector('input[placeholder="Subject"]').value.trim();
+        const email = contactForm.querySelector('input[placeholder="Email"]').value.trim();
+        const message = contactForm.querySelector('textarea[placeholder="Message"]').value.trim();
+
+        if (!email && !message && !fname && !subject) {
+            alert('Please fill at least your email and a message.');
+            return;
+        }
+
+        const to = 'alvaradomiko2000@gmail.com';
+        const mailSubject = subject || `Contact from ${fname} ${lname}`;
+        let body = '';
+        if (fname || lname) body += `Name: ${fname} ${lname}%0D%0A`;
+        if (phone) body += `Phone: ${phone}%0D%0A`;
+        if (email) body += `Email: ${email}%0D%0A%0D%0A`;
+        if (message) body += `Message:%0D%0A${encodeURIComponent(message)}%0D%0A`;
+
+        // Use encodeURIComponent for subject
+        const mailto = `mailto:${to}?subject=${encodeURIComponent(mailSubject)}&body=${body}`;
+
+        // Try opening the mail client
+        window.location.href = mailto;
+    });
 }

@@ -137,6 +137,47 @@ a {
     z-index: 10;
 }
 
+/* Ensure mobile drop menu sits below the header and has comfortable padding */
+@media (max-width: 767px) {
+    .dropNav {
+        left: 0;
+        right: 0;
+        width: 100%;
+        padding: 12px 16px;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+    }
+}
+
+/* Make mobile nav contents clearly visible and tappable */
+@media (max-width: 767px) {
+    .dropNav {
+        z-index: 9999;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    }
+
+    .nav-menu-mobile {
+        display: flex !important;
+        flex-direction: column;
+        gap: 8px;
+        padding: 8px 0;
+    }
+
+    .nav-menu-mobile li a {
+        display: block;
+        padding: 12px 16px;
+        color: var(--white-color);
+        background: transparent;
+        border-radius: 8px;
+        font-size: 1.05rem;
+    }
+
+    .nav-menu-mobile li a:hover {
+        background: rgba(46,255,255,0.04);
+        color: var(--brand-color);
+    }
+}
+
 .nav-menu-mobile {
     text-align: center;
     display: flex;
@@ -671,25 +712,25 @@ a {
 }
 
 @media (max-width: 600px) {
+    /* Keep prev/next horizontal on small screens */
     .projects-carousel {
-        grid-template-columns: 1fr;
+        grid-template-columns: 44px 1fr 44px;
         gap: 12px;
+        align-items: center;
     }
 
     .carousel-btn {
-        justify-self: center;
+        justify-self: auto;
+        height: 40px;
+        width: 40px;
     }
 
     .carousel-btn.prev {
-        order: 1;
-    }
-
-    .carousel-track {
-        order: 2;
+        justify-self: start;
     }
 
     .carousel-btn.next {
-        order: 3;
+        justify-self: end;
     }
 }
 
@@ -902,5 +943,92 @@ a {
 
     .banner_image {
         width: 110%;
+    }
+}
+
+/* Mobile tweaks for better small-screen layout */
+@media (max-width: 767px) {
+    .navbar {
+        height: 64px;
+    }
+
+    .navbar-inner {
+        height: 64px;
+        padding: 0 12px;
+    }
+
+    .menu-toggle {
+        font-size: 1.75rem;
+        padding: 8px;
+        display: inline-grid;
+        place-items: center;
+    }
+
+    .dropNav {
+        top: 64px;
+        padding: 12px;
+    }
+
+    .hero {
+        padding: 100px 0 40px;
+    }
+
+    .hero-grid {
+        gap: 20px;
+        padding: 0 12px;
+    }
+
+    .name {
+        font-size: 2rem;
+    }
+
+    .hi_text {
+        font-size: 1rem;
+    }
+
+    .description {
+        max-width: 100%;
+        font-size: 0.95rem;
+        padding: 0 6px;
+    }
+
+    .banner_btn {
+        gap: 12px;
+        padding-top: 8px;
+    }
+
+    .btn-custom {
+        padding: 10px 18px;
+        font-size: 1rem;
+    }
+
+    .skills-grid {
+        gap: 12px;
+    }
+
+    .skill-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .project-card {
+        padding: 20px;
+        min-height: auto;
+    }
+
+    .contact-form {
+        width: 100%;
+        padding: 0 12px;
+    }
+
+    .form-button,
+    .form-input,
+    .form-textarea {
+        width: 100%;
+    }
+
+    .nav-menu-mobile a {
+        font-size: 1.05rem;
+        padding: 10px 0;
     }
 }
