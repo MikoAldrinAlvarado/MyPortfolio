@@ -163,35 +163,20 @@ if (carousel) {
     setActiveSlide(0);
 }
 
-// Contact form: build mailto link and open mail client as fallback (no backend)
-const contactForm = document.querySelector('.contact-form');
+// Contact form: EmailJS submit
+const contactForm = document.getElementById('contact-form');
 if (contactForm) {
     contactForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        const fname = contactForm.querySelector('input[placeholder="First Name"]').value.trim();
-        const lname = contactForm.querySelector('input[placeholder="Last Name"]').value.trim();
-        const phone = contactForm.querySelector('input[placeholder="Phone"]').value.trim();
-        const subject = contactForm.querySelector('input[placeholder="Subject"]').value.trim();
-        const email = contactForm.querySelector('input[placeholder="Email"]').value.trim();
-        const message = contactForm.querySelector('textarea[placeholder="Message"]').value.trim();
 
-        if (!email && !message && !fname && !subject) {
-            alert('Please fill at least your email and a message.');
-            return;
-        }
-
-        const to = 'alvaradomiko2000@gmail.com';
-        const mailSubject = subject || `Contact from ${fname} ${lname}`;
-        let body = '';
-        if (fname || lname) body += `Name: ${fname} ${lname}%0D%0A`;
-        if (phone) body += `Phone: ${phone}%0D%0A`;
-        if (email) body += `Email: ${email}%0D%0A%0D%0A`;
-        if (message) body += `Message:%0D%0A${encodeURIComponent(message)}%0D%0A`;
-
-        // Use encodeURIComponent for subject
-        const mailto = `mailto:${to}?subject=${encodeURIComponent(mailSubject)}&body=${body}`;
-
-        // Try opening the mail client
-        window.location.href = mailto;
+        emailjs.sendForm(
+            'service_0luhwds',
+            'template_a1r067h',
+            this
+        ).then(function () {
+            alert('Message sent successfully!');
+        }, function (error) {
+            alert('Failed: ' + error.text);
+        });
     });
 }
